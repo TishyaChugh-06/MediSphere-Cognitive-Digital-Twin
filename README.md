@@ -128,10 +128,3 @@ Future milestones include:
 - SHAP explainability
 - Care plan generation
 
-## License
-
-[Your License Here]
-
-## Contact
-
-[Your Contact Info]
