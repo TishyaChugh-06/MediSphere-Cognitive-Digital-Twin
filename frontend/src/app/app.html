@@ -1,0 +1,102 @@
+<router-outlet></router-outlet><div class="shell">
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <span class="brand-mark">
+        MS
+      </span>
+
+      <div class="brand-text">
+        <span class="brand-name">
+          MediSphere
+        </span>
+
+        <span class="brand-tag">
+          Cognitive Digital Twin
+        </span>
+      </div>
+
+    </div>
+
+
+    <span class="milestone-badge">
+      Milestone 1 — FHIR Integration &amp;
+      Twin Foundation
+    </span>
+
+
+    <div class="topbar-actions">
+
+      <div
+        class="fhir-status"
+        [class.is-live]="fhirLive()"
+      >
+
+        <span class="status-dot"></span>
+
+        {{ fhirLive()
+          ? 'FHIR Live'
+          : 'FHIR Offline'
+        }}
+
+      </div>
+
+
+      <button
+        class="sync-btn"
+        type="button"
+        (click)="syncEhr()"
+      >
+        Sync EHR
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <nav class="top-nav">
+
+    @for (item of navItems; track item.label) {
+
+      @if (item.future) {
+
+        <span class="nav-tab disabled">
+
+          {{ item.label }}
+
+          <span class="future-tag">
+            M2+
+          </span>
+
+        </span>
+
+      } @else {
+
+        <a
+          class="nav-tab"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{
+            exact: item.path === '/'
+          }"
+        >
+          {{ item.label }}
+        </a>
+
+      }
+
+    }
+
+  </nav>
+
+
+  <main class="content">
+
+    <router-outlet></router-outlet>
+
+  </main>
+
+</div>

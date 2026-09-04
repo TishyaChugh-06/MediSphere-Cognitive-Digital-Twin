@@ -1,0 +1,401 @@
+<section class="page-head">
+  <div class="page-head-top">
+    <div>
+      <h1>Patient 360 Dashboard</h1>
+
+      <p>
+        A unified view of a single patient built on FHIR R4 resources and
+        core health data
+      </p>
+    </div>
+
+    <div class="role-switch">
+      <span class="role-switch-label">Viewing as</span>
+
+      <button
+        type="button"
+        class="role-btn"
+        [class.active]="role() === 'clinician'"
+        (click)="setRole('clinician')"
+      >
+        Clinician
+      </button>
+
+      <button
+        type="button"
+        class="role-btn"
+        [class.active]="role() === 'patient'"
+        (click)="setRole('patient')"
+      >
+        Patient
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<section class="kpi-row">
+
+  @for (kpi of kpis; track kpi.label) {
+
+    <article class="kpi-card">
+
+      <span class="kpi-label">
+        {{ kpi.label }}
+      </span>
+
+      <span class="kpi-value">
+        {{ kpi.value }}
+      </span>
+
+      <span class="kpi-helper">
+        {{ kpi.helper }}
+      </span>
+
+    </article>
+
+  }
+
+  <article class="kpi-card">
+
+    <span class="kpi-label">
+      Twin Completeness
+    </span>
+
+    <span class="kpi-value">
+      {{ twinCompleteness() }}%
+    </span>
+
+    <span class="kpi-helper">
+      Core demographic fields
+    </span>
+
+  </article>
+
+</section>
+
+
+<section class="twin-row">
+
+  <article class="card twin-summary">
+
+    <header class="card-head">
+
+      <h2>
+        Digital Health Twin — {{ patient()?.name }}
+      </h2>
+
+      @if (fhirPatient()) {
+
+        <span class="fhir-chip">
+          FHIR Patient Resource Loaded
+        </span>
+
+      } @else {
+
+        <span class="tag-muted">
+          Loading FHIR Resource...
+        </span>
+
+      }
+
+    </header>
+
+
+    <div class="completeness-bar">
+
+      <div
+        class="completeness-fill"
+        [style.width.%]="twinCompleteness()"
+      ></div>
+
+    </div>
+
+
+    <span class="completeness-label">
+      {{ twinCompleteness() }}% twin data completeness
+    </span>
+
+
+    <dl class="twin-facts">
+
+      <div>
+        <dt>Patient ID</dt>
+        <dd>{{ patient()?.id }}</dd>
+      </div>
+
+      <div>
+        <dt>Age</dt>
+        <dd>{{ patient()?.age }}</dd>
+      </div>
+
+      <div>
+        <dt>Gender</dt>
+        <dd>{{ patient()?.gender }}</dd>
+      </div>
+
+      <div>
+        <dt>Blood Group</dt>
+        <dd>{{ patient()?.bloodGroup }}</dd>
+      </div>
+
+    </dl>
+
+  </article>
+
+
+  <article class="card twin-visual">
+
+    <header class="card-head">
+
+      <h2>Twin Visualization</h2>
+
+      <span class="tag-muted">
+        Conceptual — not a medical 3D model
+      </span>
+
+    </header>
+
+
+    <div class="twin-figure">
+
+      <div class="twin-head"></div>
+
+      <div class="twin-torso">
+        <span class="pulse-dot" aria-hidden="true"></span>
+      </div>
+
+      <div class="twin-arm twin-arm-left"></div>
+
+      <div class="twin-arm twin-arm-right"></div>
+
+      <div class="twin-leg twin-leg-left"></div>
+
+      <div class="twin-leg twin-leg-right"></div>
+
+      <div class="scan-line" aria-hidden="true"></div>
+
+    </div>
+
+
+    <p class="twin-caption">
+      Illustrative body-systems placeholder. Organ-level risk modeling is a
+      later milestone.
+    </p>
+
+  </article>
+
+</section>
+
+
+<section class="card">
+
+  <header class="card-head">
+
+    <h2>Vitals</h2>
+
+    <span class="tag-muted">
+      Live MongoDB Data
+    </span>
+
+  </header>
+
+
+  <div class="vitals-row">
+
+    @for (vital of vitals(); track vital.label) {
+
+      <div
+        class="vital-card"
+        [class]="'status-' + vital.status"
+      >
+
+        <span class="vital-label">
+          {{ vital.label }}
+        </span>
+
+        <span class="vital-value">
+          {{ vital.value }}
+          <small>{{ vital.unit }}</small>
+        </span>
+
+      </div>
+
+    }
+
+  </div>
+
+</section>
+
+
+<section class="card">
+
+  <header class="card-head">
+
+    <h2>Laboratory</h2>
+
+    <span class="tag-muted">
+      Sample Laboratory Data
+    </span>
+
+  </header>
+
+
+  <table class="lab-table">
+
+    <thead>
+
+      <tr>
+        <th>Test</th>
+        <th>Value</th>
+        <th>Reference Range</th>
+      </tr>
+
+    </thead>
+
+
+    <tbody>
+
+      @for (lab of labResults; track lab.test) {
+
+        <tr>
+
+          <td>
+            {{ lab.test }}
+          </td>
+
+          <td class="lab-value">
+            {{ lab.value }}
+            <small>{{ lab.unit }}</small>
+          </td>
+
+          <td class="lab-range">
+            {{ lab.referenceRange }}
+          </td>
+
+        </tr>
+
+      }
+
+    </tbody>
+
+  </table>
+
+</section>
+
+
+@if (role() === 'clinician') {
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <h2>Validation Suite</h2>
+
+      <span class="tag-muted">
+        {{ validationChecks().length }} checks
+      </span>
+
+    </header>
+
+
+    <ul class="validation-list">
+
+      @for (check of validationChecks(); track check.label) {
+
+        <li>
+
+          <span
+            class="validation-badge"
+            [class]="'status-' + check.status"
+          >
+            {{
+              check.status === 'pass'
+                ? 'Pass'
+                : check.status === 'watch'
+                  ? 'Review'
+                  : 'Fail'
+            }}
+          </span>
+
+
+          <div class="validation-text">
+
+            <strong>
+              {{ check.label }}
+            </strong>
+
+            <span>
+              {{ check.detail }}
+            </span>
+
+          </div>
+
+        </li>
+
+      }
+
+    </ul>
+
+  </section>
+
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <h2>FHIR Integration Status</h2>
+
+    </header>
+
+
+    <ul class="fhir-status-list">
+
+      @for (
+        status of fhirStatuses();
+        track status.resourceType
+      ) {
+
+        <li>
+
+          <span
+            class="fhir-status-badge"
+            [class.is-loaded]="status.status === 'Loaded'"
+          >
+            {{ status.status }}
+          </span>
+
+
+          <div class="fhir-status-text">
+
+            <strong>
+              {{ status.resourceType }}
+            </strong>
+
+            <span>
+              {{ status.detail }}
+            </span>
+
+          </div>
+
+        </li>
+
+      }
+
+    </ul>
+
+  </section>
+
+} @else {
+
+  <section class="card patient-note">
+
+    <p>
+      You're viewing the patient summary. Technical panels like the
+      validation suite and FHIR resource status are only shown in the
+      clinician view — that's the RBAC boundary in action.
+    </p>
+
+  </section>
+
+}

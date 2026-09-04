@@ -1,0 +1,13 @@
+{
+  "resourceType": "Patient",
+  "id": "P001",
+  "name": [
+    {
+      "use": "official",
+      "family": "Sharma",
+      "given": ["Rahul"]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1981-05-15"
+}

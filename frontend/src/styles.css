@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-base: #14120f;
+  --bg-surface: #1c1a16;
+  --bg-surface-raised: #24211c;
+  --border-hairline: #33302a;
+  --border-strong: #47433a;
+  --text-primary: #f1ede4;
+  --text-secondary: #a49e8f;
+  --text-muted: #6e6a5f;
+  --accent-amber: #e2a53b;
+  --accent-slate: #6b8cae;
+  --status-normal: #4f9d78;
+  --status-watch: #e2a53b;
+  --status-critical: #c1524a;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-data: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
