@@ -1,0 +1,247 @@
+<section class="page-head">
+
+  <div>
+    <div class="eyebrow">
+      HEALTHCARE INTEROPERABILITY
+    </div>
+
+    <h1>FHIR Resources</h1>
+
+    <p>
+      FHIR R4 resources retrieved from the MediSphere backend.
+    </p>
+  </div>
+
+  <div class="live-indicator">
+    <span></span>
+    FHIR R4 Live
+  </div>
+
+</section>
+
+
+@if (loading()) {
+
+  <section class="card loading-card">
+    Loading FHIR resource...
+  </section>
+
+} @else if (fhirPatient(); as patient) {
+
+
+  <!-- RESOURCE SUMMARY -->
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <div>
+        <div class="section-label">
+          FHIR R4 RESOURCE
+        </div>
+
+        <h2>Patient Resource</h2>
+      </div>
+
+      <span class="status">
+        <span class="status-dot"></span>
+        Loaded
+      </span>
+
+    </header>
+
+
+    <div class="resource-grid">
+
+      <div class="resource-fact">
+
+        <span>Resource Type</span>
+
+        <strong>
+          {{ patient.resourceType }}
+        </strong>
+
+      </div>
+
+
+      <div class="resource-fact">
+
+        <span>FHIR ID</span>
+
+        <strong>
+          {{ patient.id }}
+        </strong>
+
+      </div>
+
+
+      <div class="resource-fact">
+
+        <span>Patient Name</span>
+
+        <strong>
+          {{ patient.name?.[0]?.given?.[0] }}
+          {{ patient.name?.[0]?.family }}
+        </strong>
+
+      </div>
+
+
+      <div class="resource-fact">
+
+        <span>Gender</span>
+
+        <strong>
+          {{ patient.gender }}
+        </strong>
+
+      </div>
+
+
+      <div class="resource-fact">
+
+        <span>Birth Date</span>
+
+        <strong>
+          {{ patient.birthDate }}
+        </strong>
+
+      </div>
+
+
+      <div class="resource-fact">
+
+        <span>Phone</span>
+
+        <strong>
+          {{ patient.telecom?.[0]?.value }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- INTEGRATION -->
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <div>
+        <div class="section-label">
+          INTEROPERABILITY
+        </div>
+
+        <h2>FHIR Integration Status</h2>
+      </div>
+
+    </header>
+
+
+    <div class="integration-grid">
+
+      <div class="integration-item">
+
+        <div class="integration-icon">
+          ✓
+        </div>
+
+        <div>
+          <strong>FHIR R4</strong>
+          <span>FHIR standard configured</span>
+        </div>
+
+        <b>Active</b>
+
+      </div>
+
+
+      <div class="integration-item">
+
+        <div class="integration-icon">
+          ✓
+        </div>
+
+        <div>
+          <strong>Patient Resource</strong>
+          <span>Successfully retrieved from backend</span>
+        </div>
+
+        <b>Loaded</b>
+
+      </div>
+
+
+      <div class="integration-item">
+
+        <div class="integration-icon">
+          ✓
+        </div>
+
+        <div>
+          <strong>HAPI FHIR</strong>
+          <span>FHIR resource conversion active</span>
+        </div>
+
+        <b>Active</b>
+
+      </div>
+
+
+      <div class="integration-item">
+
+        <div class="integration-icon">
+          ✓
+        </div>
+
+        <div>
+          <strong>Spring Boot API</strong>
+          <span>Backend resource endpoint connected</span>
+        </div>
+
+        <b>Connected</b>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- JSON -->
+
+  <section class="card json-card">
+
+    <header class="card-head">
+
+      <div>
+        <div class="section-label">
+          RAW RESOURCE
+        </div>
+
+        <h2>FHIR JSON</h2>
+
+        <p>
+          Raw FHIR R4 Patient resource returned by the backend.
+        </p>
+      </div>
+
+      <span class="tag">
+        JSON
+      </span>
+
+    </header>
+
+
+    <div class="json-container">
+
+      <pre>{{ patient | json }}</pre>
+
+    </div>
+
+  </section>
+
+}

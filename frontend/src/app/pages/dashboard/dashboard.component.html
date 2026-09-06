@@ -75,26 +75,36 @@
 </section>
 
 
+<!-- DIGITAL TWIN -->
+
 <section class="twin-row">
 
   <article class="card twin-summary">
 
     <header class="card-head">
 
-      <h2>
-        Digital Health Twin — {{ patient()?.name }}
-      </h2>
+      <div>
+        <h2>
+          Digital Health Twin
+        </h2>
 
-      @if (fhirPatient()) {
+        @if (digitalTwin()) {
+          <span class="twin-patient-name">
+            {{ digitalTwin().patient.name }}
+          </span>
+        }
+      </div>
 
-        <span class="fhir-chip">
-          FHIR Patient Resource Loaded
+      @if (digitalTwin()) {
+
+        <span class="twin-status">
+          {{ digitalTwin().twinStatus }}
         </span>
 
       } @else {
 
         <span class="tag-muted">
-          Loading FHIR Resource...
+          Loading Digital Twin...
         </span>
 
       }
@@ -117,29 +127,72 @@
     </span>
 
 
-    <dl class="twin-facts">
+    @if (digitalTwin(); as twin) {
 
-      <div>
-        <dt>Patient ID</dt>
-        <dd>{{ patient()?.id }}</dd>
+      <dl class="twin-facts">
+
+        <div>
+          <dt>Patient ID</dt>
+          <dd>{{ twin.patientId }}</dd>
+        </div>
+
+        <div>
+          <dt>Age</dt>
+          <dd>{{ twin.patient.age }}</dd>
+        </div>
+
+        <div>
+          <dt>Gender</dt>
+          <dd>{{ twin.patient.gender }}</dd>
+        </div>
+
+        <div>
+          <dt>Blood Group</dt>
+          <dd>{{ twin.patient.bloodGroup }}</dd>
+        </div>
+
+        <div>
+          <dt>Heart Rate</dt>
+
+          <dd>
+            {{ twin.vitals[twin.vitals.length - 1]?.heartRate }}
+            <small>bpm</small>
+          </dd>
+
+        </div>
+
+        <div>
+          <dt>SpO2</dt>
+
+          <dd>
+            {{ twin.vitals[twin.vitals.length - 1]?.spo2 }}
+            <small>%</small>
+          </dd>
+
+        </div>
+
+      </dl>
+
+
+      <div class="twin-health-status">
+
+        <span>
+          Health Status
+        </span>
+
+        <strong>
+          {{ twin.healthStatus }}
+        </strong>
+
       </div>
 
-      <div>
-        <dt>Age</dt>
-        <dd>{{ patient()?.age }}</dd>
-      </div>
+    } @else {
 
-      <div>
-        <dt>Gender</dt>
-        <dd>{{ patient()?.gender }}</dd>
-      </div>
+      <p class="twin-loading">
+        Digital Twin data is loading from backend...
+      </p>
 
-      <div>
-        <dt>Blood Group</dt>
-        <dd>{{ patient()?.bloodGroup }}</dd>
-      </div>
-
-    </dl>
+    }
 
   </article>
 
@@ -188,6 +241,8 @@
 </section>
 
 
+<!-- VITALS -->
+
 <section class="card">
 
   <header class="card-head">
@@ -228,6 +283,8 @@
 </section>
 
 
+<!-- LABORATORY -->
+
 <section class="card">
 
   <header class="card-head">
@@ -235,54 +292,66 @@
     <h2>Laboratory</h2>
 
     <span class="tag-muted">
-      Sample Laboratory Data
+      Live MongoDB Data
     </span>
 
   </header>
 
 
-  <table class="lab-table">
+  @if (labResults().length > 0) {
 
-    <thead>
+    <table class="lab-table">
 
-      <tr>
-        <th>Test</th>
-        <th>Value</th>
-        <th>Reference Range</th>
-      </tr>
-
-    </thead>
-
-
-    <tbody>
-
-      @for (lab of labResults; track lab.test) {
+      <thead>
 
         <tr>
-
-          <td>
-            {{ lab.test }}
-          </td>
-
-          <td class="lab-value">
-            {{ lab.value }}
-            <small>{{ lab.unit }}</small>
-          </td>
-
-          <td class="lab-range">
-            {{ lab.referenceRange }}
-          </td>
-
+          <th>Test</th>
+          <th>Value</th>
+          <th>Reference Range</th>
         </tr>
 
-      }
+      </thead>
 
-    </tbody>
 
-  </table>
+      <tbody>
+
+        @for (lab of labResults(); track lab.test) {
+
+          <tr>
+
+            <td>
+              {{ lab.test }}
+            </td>
+
+            <td class="lab-value">
+              {{ lab.value }}
+              <small>{{ lab.unit }}</small>
+            </td>
+
+            <td class="lab-range">
+              {{ lab.referenceRange }}
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  } @else {
+
+    <p class="twin-loading">
+      Laboratory data is loading from backend...
+    </p>
+
+  }
 
 </section>
 
+
+<!-- CLINICIAN VIEW -->
 
 @if (role() === 'clinician') {
 

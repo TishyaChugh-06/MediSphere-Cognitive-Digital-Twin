@@ -1,102 +1,121 @@
-<router-outlet></router-outlet><div class="shell">
+@if (router.url === '/login') {
 
-  <header class="topbar">
+  <router-outlet></router-outlet>
 
-    <div class="brand">
+} @else {
 
-      <span class="brand-mark">
-        MS
-      </span>
+  <div class="shell">
 
-      <div class="brand-text">
-        <span class="brand-name">
-          MediSphere
+    <header class="topbar">
+
+      <div class="brand">
+
+        <span class="brand-mark">
+          MS
         </span>
 
-        <span class="brand-tag">
-          Cognitive Digital Twin
-        </span>
-      </div>
+        <div class="brand-text">
 
-    </div>
-
-
-    <span class="milestone-badge">
-      Milestone 1 — FHIR Integration &amp;
-      Twin Foundation
-    </span>
-
-
-    <div class="topbar-actions">
-
-      <div
-        class="fhir-status"
-        [class.is-live]="fhirLive()"
-      >
-
-        <span class="status-dot"></span>
-
-        {{ fhirLive()
-          ? 'FHIR Live'
-          : 'FHIR Offline'
-        }}
-
-      </div>
-
-
-      <button
-        class="sync-btn"
-        type="button"
-        (click)="syncEhr()"
-      >
-        Sync EHR
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <nav class="top-nav">
-
-    @for (item of navItems; track item.label) {
-
-      @if (item.future) {
-
-        <span class="nav-tab disabled">
-
-          {{ item.label }}
-
-          <span class="future-tag">
-            M2+
+          <span class="brand-name">
+            MediSphere
           </span>
 
-        </span>
+          <span class="brand-tag">
+            Cognitive Digital Twin
+          </span>
 
-      } @else {
+        </div>
 
-        <a
-          class="nav-tab"
-          [routerLink]="item.path"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{
-            exact: item.path === '/'
-          }"
+      </div>
+
+
+      <span class="milestone-badge">
+        Milestone 1 — FHIR Integration &amp;
+        Twin Foundation
+      </span>
+
+
+      <div class="topbar-actions">
+
+        <div
+          class="fhir-status"
+          [class.is-live]="fhirLive()"
         >
-          {{ item.label }}
-        </a>
+
+          <span class="status-dot"></span>
+
+          {{ fhirLive()
+            ? 'FHIR Live'
+            : 'FHIR Offline'
+          }}
+
+        </div>
+
+
+        <button
+          class="sync-btn"
+          type="button"
+          (click)="syncEhr()"
+        >
+          Sync EHR
+        </button>
+
+
+        <button
+          class="logout-btn"
+          type="button"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <nav class="top-nav">
+
+      @for (item of navItems; track item.label) {
+
+        @if (item.future) {
+
+          <span class="nav-tab disabled">
+
+            {{ item.label }}
+
+            <span class="future-tag">
+              M2+
+            </span>
+
+          </span>
+
+        } @else {
+
+          <a
+            class="nav-tab"
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{
+              exact: item.path === '/'
+            }"
+          >
+            {{ item.label }}
+          </a>
+
+        }
 
       }
 
-    }
-
-  </nav>
+    </nav>
 
 
-  <main class="content">
+    <main class="content">
 
-    <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
 
-  </main>
+    </main>
 
-</div>
+  </div>
+
+}

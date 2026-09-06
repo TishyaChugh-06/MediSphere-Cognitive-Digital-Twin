@@ -18,6 +18,14 @@ export class PatientDetailsComponent {
 
   protected readonly patient = signal<Patient | null>(null);
 
+  protected readonly vitals = signal<any[]>([]);
+
+  protected readonly labResults = signal<any[]>([]);
+
+  protected readonly fhirPatient = signal<any | null>(null);
+
+  protected readonly digitalTwin = signal<any | null>(null);
+
   protected readonly kpis = [
     {
       label: 'Patients Onboarded',
@@ -33,50 +41,6 @@ export class PatientDetailsComponent {
       label: 'Digital Twin',
       value: 'Active',
       info: 'Foundation Ready'
-    }
-  ];
-
-  protected readonly vitals = [
-    {
-      label: 'Heart Rate',
-      value: '76',
-      unit: 'bpm',
-      icon: '❤️'
-    },
-    {
-      label: 'Blood Pressure',
-      value: '120/80',
-      unit: 'mmHg',
-      icon: '🩸'
-    },
-    {
-      label: 'SpO₂',
-      value: '98',
-      unit: '%',
-      icon: '🫁'
-    }
-  ];
-
-  protected readonly labResults = [
-    {
-      test: 'HbA1c',
-      value: '7.2%',
-      code: 'LOINC 4548-4'
-    },
-    {
-      test: 'eGFR',
-      value: '65',
-      code: 'Sample Result'
-    },
-    {
-      test: 'LDL',
-      value: '120',
-      code: 'mg/dL'
-    },
-    {
-      test: 'Glucose',
-      value: '142',
-      code: 'mg/dL'
     }
   ];
 
@@ -96,20 +60,104 @@ export class PatientDetailsComponent {
   ];
 
   constructor() {
+
     const id =
       this.route.snapshot.paramMap.get('id') ?? 'P001';
 
     this.loadPatient(id);
+    this.loadVitals(id);
+    this.loadLabs(id);
+    this.loadFhirPatient(id);
+    this.loadDigitalTwin(id);
   }
 
   private loadPatient(id: string): void {
+
     this.patientService.getPatientById(id).subscribe({
+
       next: (patient) => {
         this.patient.set(patient);
       },
+
       error: (error) => {
-        console.error('Failed to load patient:', error);
+        console.error(
+          'Failed to load patient:',
+          error
+        );
       }
+
+    });
+  }
+
+  private loadVitals(id: string): void {
+
+    this.patientService.getVitalsByPatient(id).subscribe({
+
+      next: (vitals) => {
+        this.vitals.set(vitals);
+      },
+
+      error: (error) => {
+        console.error(
+          'Failed to load vitals:',
+          error
+        );
+      }
+
+    });
+  }
+
+  private loadLabs(id: string): void {
+
+    this.patientService.getLabsByPatient(id).subscribe({
+
+      next: (labs) => {
+        this.labResults.set(labs);
+      },
+
+      error: (error) => {
+        console.error(
+          'Failed to load laboratory results:',
+          error
+        );
+      }
+
+    });
+  }
+
+  private loadFhirPatient(id: string): void {
+
+    this.patientService.getFhirPatient(id).subscribe({
+
+      next: (fhirPatient) => {
+        this.fhirPatient.set(fhirPatient);
+      },
+
+      error: (error) => {
+        console.error(
+          'Failed to load FHIR patient:',
+          error
+        );
+      }
+
+    });
+  }
+
+  private loadDigitalTwin(id: string): void {
+
+    this.patientService.getDigitalTwin(id).subscribe({
+
+      next: (twin) => {
+        this.digitalTwin.set(twin);
+      },
+
+      error: (error) => {
+        console.error(
+          'Failed to load Digital Twin:',
+          error
+        );
+      }
+
     });
   }
 }

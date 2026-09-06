@@ -33,37 +33,14 @@ export class DashboardComponent {
 
   protected readonly fhirPatient = signal<any | null>(null);
 
+  protected readonly digitalTwin = signal<any | null>(null);
+
   protected readonly consentCaptured = true;
 
-  // Real vitals loaded from MongoDB
   protected readonly vitals = signal<VitalSign[]>([]);
 
-  protected readonly labResults: LabResult[] = [
-    {
-      test: 'HbA1c',
-      value: '5.6',
-      unit: '%',
-      referenceRange: '4.0 - 5.6'
-    },
-    {
-      test: 'eGFR',
-      value: '92',
-      unit: 'mL/min/1.73m²',
-      referenceRange: '≥ 90'
-    },
-    {
-      test: 'LDL Cholesterol',
-      value: '110',
-      unit: 'mg/dL',
-      referenceRange: '< 130'
-    },
-    {
-      test: 'Glucose (Fasting)',
-      value: '94',
-      unit: 'mg/dL',
-      referenceRange: '70 - 99'
-    }
-  ];
+  // Laboratory results are now loaded from the Digital Twin backend
+  protected readonly labResults = signal<LabResult[]>([]);
 
   protected readonly fhirStatuses =
     computed<FhirResourceStatus[]>(() => [
@@ -105,6 +82,7 @@ export class DashboardComponent {
     this.loadPatient();
     this.loadFhirPatient();
     this.loadVitals();
+    this.loadDigitalTwin();
   }
 
   private loadPatient(): void {
@@ -157,6 +135,29 @@ export class DashboardComponent {
 
       error: (error) => {
         console.error('Failed to load vitals:', error);
+      }
+    });
+  }
+
+  private loadDigitalTwin(): void {
+    this.patientService.getDigitalTwin('P001').subscribe({
+      next: (twin) => {
+
+        this.digitalTwin.set(twin);
+
+        // Load laboratory results from Digital Twin
+        if (twin.labResults) {
+          this.labResults.set(twin.labResults);
+        } else {
+          this.labResults.set([]);
+        }
+
+        console.log('Digital Twin loaded:', twin);
+        console.log('Laboratory results loaded:', twin.labResults);
+      },
+
+      error: (error) => {
+        console.error('Failed to load Digital Twin:', error);
       }
     });
   }

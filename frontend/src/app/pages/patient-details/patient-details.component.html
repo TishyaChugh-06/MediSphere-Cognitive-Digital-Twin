@@ -1,135 +1,268 @@
 <section class="page-head">
-  <div>
+
+  <div class="page-title">
+
+    <div class="eyebrow">
+      PATIENT MANAGEMENT
+    </div>
+
     <h1>Patient Details</h1>
 
     <p>
-      Detailed patient information retrieved from the MediSphere backend
+      Detailed patient information retrieved from the MediSphere backend.
     </p>
+
   </div>
 
-  <a class="back-link" routerLink="/">
+  <a
+    routerLink="/"
+    class="back-link"
+  >
     ← Back to Dashboard
   </a>
+
 </section>
 
-@if (patient(); as p) {
+
+@if (patient(); as currentPatient) {
+
+  <!-- KPI CARDS -->
 
   <section class="kpi-row">
 
     @for (kpi of kpis; track kpi.label) {
+
       <article class="kpi-card">
 
         <span class="kpi-label">
           {{ kpi.label }}
         </span>
 
-        <span class="kpi-value">
+        <strong class="kpi-value">
           {{ kpi.value }}
-        </span>
+        </strong>
 
-        <span class="kpi-helper">
+        <span class="kpi-info">
           {{ kpi.info }}
         </span>
 
       </article>
+
     }
 
   </section>
 
 
-  <section class="details-grid">
+  <!-- PATIENT INFORMATION -->
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <div>
+        <span class="section-label">
+          PATIENT RECORD
+        </span>
+
+        <h2>Patient Information</h2>
+      </div>
+
+      <span class="data-badge">
+        MongoDB Record
+      </span>
+
+    </header>
+
+
+    <div class="patient-grid">
+
+      <div class="info-item">
+        <span>Patient ID</span>
+        <strong>{{ currentPatient.id }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Full Name</span>
+        <strong>{{ currentPatient.name }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Age</span>
+        <strong>{{ currentPatient.age }} years</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Gender</span>
+        <strong>{{ currentPatient.gender }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Blood Group</span>
+        <strong>{{ currentPatient.bloodGroup }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Phone</span>
+        <strong>{{ currentPatient.phone }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>Birth Date</span>
+        <strong>{{ currentPatient.birthDate }}</strong>
+      </div>
+
+      <div class="info-item">
+        <span>FHIR Resource</span>
+        <strong class="success-text">
+          Patient Loaded
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- HEALTH OVERVIEW -->
+
+  <section class="two-column">
+
+
+    <!-- VITALS -->
 
     <article class="card">
 
       <header class="card-head">
-        <h2>Patient Information</h2>
 
-        <span class="fhir-chip">
-          MongoDB Record
+        <div>
+          <span class="section-label">
+            REAL-TIME MONITORING
+          </span>
+
+          <h2>Latest Vitals</h2>
+        </div>
+
+        <span class="data-badge">
+          MongoDB
         </span>
+
       </header>
 
-      <dl class="patient-facts">
 
-        <div>
-          <dt>Patient ID</dt>
-          <dd>{{ p.id }}</dd>
+      @if (vitals().length > 0) {
+
+        <div class="vitals-grid">
+
+          <div class="vital-card">
+
+            <span class="vital-label">
+              Heart Rate
+            </span>
+
+            <strong>
+              {{
+                vitals()[vitals().length - 1].heartRate
+              }}
+              <small>bpm</small>
+            </strong>
+
+            <span class="normal-label">
+              ● Normal
+            </span>
+
+          </div>
+
+
+          <div class="vital-card">
+
+            <span class="vital-label">
+              SpO₂
+            </span>
+
+            <strong>
+              {{
+                vitals()[vitals().length - 1].spo2
+              }}
+              <small>%</small>
+            </strong>
+
+            <span class="normal-label">
+              ● Normal
+            </span>
+
+          </div>
+
         </div>
 
-        <div>
-          <dt>Name</dt>
-          <dd>{{ p.name }}</dd>
+      } @else {
+
+        <div class="empty-state">
+          No vital data available.
         </div>
 
-        <div>
-          <dt>Age</dt>
-          <dd>{{ p.age }}</dd>
-        </div>
-
-        <div>
-          <dt>Gender</dt>
-          <dd>{{ p.gender }}</dd>
-        </div>
-
-        <div>
-          <dt>Blood Group</dt>
-          <dd>{{ p.bloodGroup }}</dd>
-        </div>
-
-        <div>
-          <dt>Phone</dt>
-          <dd>{{ p.phone }}</dd>
-        </div>
-
-        <div>
-          <dt>Birth Date</dt>
-          <dd>{{ p.birthDate }}</dd>
-        </div>
-
-      </dl>
+      }
 
     </article>
 
 
+    <!-- DIGITAL TWIN -->
+
     <article class="card">
 
       <header class="card-head">
-        <h2>Digital Twin Foundation</h2>
 
-        <span class="tag-muted">
+        <div>
+          <span class="section-label">
+            PATIENT MODEL
+          </span>
+
+          <h2>Digital Twin Foundation</h2>
+        </div>
+
+        <span class="milestone-tag">
           Milestone 1
         </span>
+
       </header>
 
-      <div class="foundation-status">
 
-        <div class="foundation-item">
-          <span class="status-dot"></span>
+      <div class="twin-status">
 
-          <div>
-            <strong>Patient Data</strong>
-            <span>Loaded from MongoDB</span>
-          </div>
+        <div class="twin-icon">
+          DT
         </div>
 
+        <div>
+          <strong>
+            Digital Twin Active
+          </strong>
 
-        <div class="foundation-item">
-          <span class="status-dot"></span>
-
-          <div>
-            <strong>FHIR R4</strong>
-            <span>Patient resource mapping available</span>
-          </div>
+          <span>
+            Patient health representation is available.
+          </span>
         </div>
 
+      </div>
 
-        <div class="foundation-item">
-          <span class="status-dot"></span>
 
-          <div>
-            <strong>Digital Twin</strong>
-            <span>Foundation ready</span>
-          </div>
+      <div class="twin-details">
+
+        <div>
+          <span>Status</span>
+          <strong class="success-text">
+            {{
+              digitalTwin()?.twinStatus ?? 'Active'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>Health Monitoring</span>
+          <strong>
+            {{
+              digitalTwin()?.healthStatus ?? 'Monitoring'
+            }}
+          </strong>
         </div>
 
       </div>
@@ -139,33 +272,140 @@
   </section>
 
 
+  <!-- LAB RESULTS -->
+
   <section class="card">
 
     <header class="card-head">
-      <h2>Vitals</h2>
 
-      <span class="tag-muted">
-        Demo Data
+      <div>
+        <span class="section-label">
+          CLINICAL DATA
+        </span>
+
+        <h2>Laboratory Results</h2>
+      </div>
+
+      <span class="data-badge">
+        MongoDB
       </span>
+
     </header>
 
-    <div class="vitals-row">
 
-      @for (vital of vitals; track vital.label) {
+    @if (labResults().length > 0) {
 
-        <div class="vital-card">
+      <div class="table-wrapper">
 
-          <span class="vital-icon">
-            {{ vital.icon }}
-          </span>
+        <table>
 
-          <span class="vital-label">
-            {{ vital.label }}
-          </span>
+          <thead>
 
-          <span class="vital-value">
-            {{ vital.value }}
-            <small>{{ vital.unit }}</small>
+            <tr>
+              <th>Test</th>
+              <th>Value</th>
+              <th>Unit</th>
+              <th>Reference Range</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (
+              lab of labResults();
+              track lab.test
+            ) {
+
+              <tr>
+
+                <td>
+                  <strong class="test-name">
+                    {{ lab.test }}
+                  </strong>
+                </td>
+
+                <td class="lab-value">
+                  {{ lab.value }}
+                </td>
+
+                <td>
+                  {{ lab.unit }}
+                </td>
+
+                <td class="reference">
+                  {{ lab.referenceRange }}
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+        No laboratory data available.
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- FHIR STATUS -->
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <div>
+        <span class="section-label">
+          INTEROPERABILITY
+        </span>
+
+        <h2>FHIR Integration Status</h2>
+      </div>
+
+      <span class="data-badge">
+        FHIR R4
+      </span>
+
+    </header>
+
+
+    <div class="status-list">
+
+      @for (
+        status of fhirStatuses;
+        track status.resourceType
+      ) {
+
+        <div class="status-row">
+
+          <div class="status-check">
+            ✓
+          </div>
+
+          <div class="status-content">
+
+            <strong>
+              {{ status.resourceType }}
+            </strong>
+
+            <span>
+              {{ status.status }}
+            </span>
+
+          </div>
+
+          <span class="loaded-badge">
+            {{ status.status }}
           </span>
 
         </div>
@@ -177,114 +417,10 @@
   </section>
 
 
-  <section class="card">
-
-    <header class="card-head">
-      <h2>Laboratory Results</h2>
-
-      <span class="tag-muted">
-        Sample Laboratory Data
-      </span>
-    </header>
-
-    <table class="lab-table">
-
-      <thead>
-        <tr>
-          <th>Test</th>
-          <th>Value</th>
-          <th>Code / Unit</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        @for (lab of labResults; track lab.test) {
-
-          <tr>
-
-            <td>
-              {{ lab.test }}
-            </td>
-
-            <td class="lab-value">
-              {{ lab.value }}
-            </td>
-
-            <td class="lab-range">
-              {{ lab.code }}
-            </td>
-
-          </tr>
-
-        }
-
-      </tbody>
-
-    </table>
-
-  </section>
-
-
-  <section class="card">
-
-    <header class="card-head">
-      <h2>FHIR Integration</h2>
-
-      <span class="tag-muted">
-        Resource Status
-      </span>
-    </header>
-
-    <ul class="fhir-status-list">
-
-      @for (status of fhirStatuses; track status.resourceType) {
-
-        <li>
-
-          <span
-            class="fhir-status-badge"
-            [class.is-loaded]="status.status === 'Loaded'"
-          >
-            {{ status.status }}
-          </span>
-
-          <div class="fhir-status-text">
-
-            <strong>
-              {{ status.resourceType }}
-            </strong>
-
-            <span>
-              {{
-                status.resourceType === 'Patient'
-                  ? 'FHIR R4 Patient resource available'
-                  : status.resourceType === 'FHIR R4'
-                    ? 'FHIR R4 foundation configured'
-                    : 'Patient data integrated with MongoDB'
-              }}
-            </span>
-
-          </div>
-
-        </li>
-
-      }
-
-    </ul>
-
-  </section>
-
 } @else {
 
   <section class="card loading-card">
-
-    <h2>Loading patient...</h2>
-
-    <p>
-      Retrieving patient information from the MediSphere backend.
-    </p>
-
+    Loading patient information...
   </section>
 
 }

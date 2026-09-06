@@ -13,23 +13,39 @@ export class PatientService {
 
   private apiUrl = 'http://localhost:8080/api/patients';
 
+  private baseUrl = 'http://localhost:8080/api';
+
   getAllPatients(): Observable<Patient[]> {
-  return this.http.get<Patient[]>(this.apiUrl);
-}
+    return this.http.get<Patient[]>(this.apiUrl);
+  }
 
-getPatientById(id: string): Observable<Patient> {
-  return this.http.get<Patient>(`${this.apiUrl}/${id}`);
-}
+  getPatientById(id: string): Observable<Patient> {
+    return this.http.get<Patient>(
+      `${this.apiUrl}/${id}`
+    );
+  }
 
-getFhirPatient(id: string): Observable<any> {
-  return this.http.get<any>(
-    `http://localhost:8080/api/fhir/patient/${id}`
-  );
-}
+  getFhirPatient(id: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/fhir/patient/${id}`
+    );
+  }
 
-getVitalsByPatient(id: string): Observable<any[]> {
-  return this.http.get<any[]>(
-    `http://localhost:8080/api/vitals/${id}`
-  );
-}
+  getVitalsByPatient(id: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/vitals/${id}`
+    );
+  }
+
+  getDigitalTwin(id: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/digital-twin/${id}`
+    );
+  }
+
+  getLabsByPatient(id: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/labs/${id}`
+    );
+  }
 }

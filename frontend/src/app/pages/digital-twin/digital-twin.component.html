@@ -1,0 +1,595 @@
+<section class="page-head">
+
+  <div>
+    <div class="eyebrow">
+      PATIENT MONITORING
+    </div>
+
+    <h1>Digital Health Twin</h1>
+
+    <p>
+      Unified digital representation of patient health data
+      from MongoDB, vitals and laboratory results.
+    </p>
+  </div>
+
+  <div class="live-indicator">
+    <span class="live-dot"></span>
+    Live Monitoring
+  </div>
+
+</section>
+
+
+@if (loading()) {
+
+  <section class="card loading-card">
+
+    <div class="loader"></div>
+
+    <p>
+      Loading Digital Twin data...
+    </p>
+
+  </section>
+
+} @else if (digitalTwin(); as twin) {
+
+
+  <!-- =====================================================
+       PATIENT TWIN + LATEST VITALS
+       ===================================================== -->
+
+  <section class="twin-grid">
+
+
+    <!-- PATIENT TWIN -->
+
+    <article class="card patient-card">
+
+      <header class="card-head">
+
+        <div>
+
+          <div class="section-label">
+            DIGITAL REPRESENTATION
+          </div>
+
+          <h2>
+            Patient Twin
+          </h2>
+
+          <span class="patient-name">
+            {{ twin.patient.name }}
+          </span>
+
+        </div>
+
+        <span class="status">
+
+          <span class="status-dot"></span>
+
+          {{ twin.twinStatus }}
+
+        </span>
+
+      </header>
+
+
+      <div class="facts">
+
+        <div class="fact">
+
+          <span>
+            Patient ID
+          </span>
+
+          <strong>
+            {{ twin.patientId }}
+          </strong>
+
+        </div>
+
+
+        <div class="fact">
+
+          <span>
+            Age
+          </span>
+
+          <strong>
+            {{ twin.patient.age }} years
+          </strong>
+
+        </div>
+
+
+        <div class="fact">
+
+          <span>
+            Gender
+          </span>
+
+          <strong>
+            {{ twin.patient.gender }}
+          </strong>
+
+        </div>
+
+
+        <div class="fact">
+
+          <span>
+            Blood Group
+          </span>
+
+          <strong>
+            {{ twin.patient.bloodGroup }}
+          </strong>
+
+        </div>
+
+
+        <div class="fact">
+
+          <span>
+            Phone
+          </span>
+
+          <strong>
+            {{ twin.patient.phone }}
+          </strong>
+
+        </div>
+
+
+        <div class="fact">
+
+          <span>
+            Health Status
+          </span>
+
+          <strong class="health-text">
+            {{ twin.healthStatus }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- LATEST VITALS -->
+
+    <article class="card">
+
+      <header class="card-head">
+
+        <div>
+
+          <div class="section-label">
+            REAL-TIME DATA
+          </div>
+
+          <h2>
+            Latest Vitals
+          </h2>
+
+        </div>
+
+        <span class="tag">
+          MongoDB
+        </span>
+
+      </header>
+
+
+      @if (twin.vitals?.length > 0) {
+
+        <div class="vitals">
+
+          <!-- HEART RATE -->
+
+          <div class="vital">
+
+            <div class="vital-icon heart-icon">
+              ♥
+            </div>
+
+            <div class="vital-content">
+
+              <span>
+                Heart Rate
+              </span>
+
+              <strong>
+
+                {{
+                  twin.vitals[
+                    twin.vitals.length - 1
+                  ].heartRate
+                }}
+
+                <small>
+                  bpm
+                </small>
+
+              </strong>
+
+              <em>
+                Normal range
+              </em>
+
+            </div>
+
+          </div>
+
+
+          <!-- SPO2 -->
+
+          <div class="vital">
+
+            <div class="vital-icon oxygen-icon">
+              O₂
+            </div>
+
+            <div class="vital-content">
+
+              <span>
+                SpO₂
+              </span>
+
+              <strong>
+
+                {{
+                  twin.vitals[
+                    twin.vitals.length - 1
+                  ].spo2
+                }}
+
+                <small>
+                  %
+                </small>
+
+              </strong>
+
+              <em>
+                Normal range
+              </em>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+          No vital data available.
+        </div>
+
+      }
+
+    </article>
+
+  </section>
+
+
+  <!-- =====================================================
+       HEALTH TREND GRAPH
+       ===================================================== -->
+
+  <section class="card chart-card">
+
+    <header class="card-head">
+
+      <div>
+
+        <div class="section-label">
+          HEALTH ANALYTICS
+        </div>
+
+        <h2>
+          Vital Trends
+        </h2>
+
+        <p class="card-description">
+          Recent heart rate and oxygen saturation readings
+          retrieved from the patient digital twin.
+        </p>
+
+      </div>
+
+      <span class="tag">
+        Live Data
+      </span>
+
+    </header>
+
+
+    @if (twin.vitals?.length > 0) {
+
+      <div class="chart-legend">
+
+        <div class="legend-item">
+          <span class="legend-dot heart"></span>
+          Heart Rate
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot oxygen"></span>
+          SpO₂
+        </div>
+
+      </div>
+
+
+      <div class="chart-container">
+
+        <canvas #healthChart></canvas>
+
+      </div>
+
+
+      <div class="chart-footer">
+
+        <span>
+          {{ twin.vitals.length }} vital readings
+        </span>
+
+        <span>
+          Source: MongoDB
+        </span>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-chart">
+
+        <span>
+          No trend data available.
+        </span>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- =====================================================
+       LABORATORY RESULTS
+       ===================================================== -->
+
+  <section class="card">
+
+    <header class="card-head">
+
+      <div>
+
+        <div class="section-label">
+          CLINICAL DATA
+        </div>
+
+        <h2>
+          Laboratory Results
+        </h2>
+
+      </div>
+
+      <span class="tag">
+        MongoDB
+      </span>
+
+    </header>
+
+
+    @if (twin.labResults?.length > 0) {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Test
+              </th>
+
+              <th>
+                Value
+              </th>
+
+              <th>
+                Unit
+              </th>
+
+              <th>
+                Reference Range
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              lab of twin.labResults;
+              track lab.test
+            ) {
+
+              <tr>
+
+                <td>
+
+                  <span class="test-name">
+                    {{ lab.test }}
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <strong class="lab-value">
+                    {{ lab.value }}
+                  </strong>
+
+                </td>
+
+                <td>
+                  {{ lab.unit }}
+                </td>
+
+                <td class="reference">
+                  {{ lab.referenceRange }}
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+        No laboratory data available.
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- =====================================================
+       DIGITAL TWIN DATA FLOW
+       ===================================================== -->
+
+  <section class="card flow-card">
+
+    <header class="card-head">
+
+      <div>
+
+        <div class="section-label">
+          SYSTEM ARCHITECTURE
+        </div>
+
+        <h2>
+          Twin Data Flow
+        </h2>
+
+      </div>
+
+    </header>
+
+
+    <div class="data-flow">
+
+
+      <div class="flow-node">
+
+        <span class="flow-number">
+          01
+        </span>
+
+        <div>
+          <strong>
+            Patient Data
+          </strong>
+
+          <small>
+            Patient record
+          </small>
+        </div>
+
+      </div>
+
+
+      <div class="flow-arrow">
+        →
+      </div>
+
+
+      <div class="flow-node">
+
+        <span class="flow-number">
+          02
+        </span>
+
+        <div>
+          <strong>
+            MongoDB
+          </strong>
+
+          <small>
+            Persistent storage
+          </small>
+        </div>
+
+      </div>
+
+
+      <div class="flow-arrow">
+        →
+      </div>
+
+
+      <div class="flow-node">
+
+        <span class="flow-number">
+          03
+        </span>
+
+        <div>
+          <strong>
+            Vitals + Labs
+          </strong>
+
+          <small>
+            Clinical data
+          </small>
+        </div>
+
+      </div>
+
+
+      <div class="flow-arrow">
+        →
+      </div>
+
+
+      <div class="flow-node active">
+
+        <span class="flow-number">
+          04
+        </span>
+
+        <div>
+          <strong>
+            Digital Twin
+          </strong>
+
+          <small>
+            Unified health model
+          </small>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+}
