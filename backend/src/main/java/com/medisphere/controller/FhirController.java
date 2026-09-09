@@ -2,7 +2,7 @@ package com.medisphere.controller;
 
 import ca.uhn.fhir.context.FhirContext;
 import com.medisphere.fhir.FhirPatientService;
-import com.medisphere.model.Patient;
+
 import com.medisphere.service.PatientService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
